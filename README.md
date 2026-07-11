@@ -1,4 +1,4 @@
-# fgu_dicepool
+# fgu_any
 
 Ruleset-agnostic Fantasy Grounds Unity extensions, by Kerry Harrison (sirkerry).
 
