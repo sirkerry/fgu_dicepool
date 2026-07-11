@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<root>
+	<string name="dicepool_label_none">-</string>
+	<string name="dicepool_label_keephigh">Keep High</string>
+	<string name="dicepool_label_keeplow">Keep Low</string>
+	<string name="dicepool_label_pool_header">Pool</string>
+</root>

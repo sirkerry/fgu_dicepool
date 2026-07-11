@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<root>
+	<windowclass name="table_main" merge="join">
+		<sheetdata merge="add">
+			<label_tabletop name="label_poolmode" insertbefore="label_output">
+				<anchored width="55">
+					<left anchor="right" relation="relative" offset="20" />
+				</anchored>
+				<static textres="dicepool_label_pool_header" />
+			</label_tabletop>
+			<button_stringcycler name="poolmode" insertbefore="output">
+				<anchored to="leftanchor" width="60">
+					<top offset="-1" />
+					<left anchor="right" relation="relative" offset="20" />
+				</anchored>
+				<parameters>
+					<defaultlabelres>dicepool_label_none</defaultlabelres>
+					<labelsres>dicepool_label_keephigh|dicepool_label_keeplow</labelsres>
+					<values>kh|kl</values>
+				</parameters>
+			</button_stringcycler>
+			<basicnumber name="poolamount" insertbefore="output">
+				<anchored to="leftanchor" width="20">
+					<top offset="-1" />
+					<left anchor="right" relation="relative" offset="10" />
+				</anchored>
+			</basicnumber>
+		</sheetdata>
+	</windowclass>
+</root>
