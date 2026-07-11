@@ -5,7 +5,7 @@
 		<sheetdata merge="add">
 			<label_tabletop name="label_poolmode" insertbefore="label_output">
 				<anchored width="55">
-					<left anchor="right" relation="relative" offset="20" />
+					<left anchor="right" relation="relative" offset="42" />
 				</anchored>
 				<static textres="tablekeepdrop_label_pool_header" />
 			</label_tabletop>
@@ -23,9 +23,18 @@
 			<basicnumber name="poolamount" insertbefore="output">
 				<anchored to="leftanchor" width="20">
 					<top offset="-1" />
-					<left anchor="right" relation="relative" offset="10" />
+					<left anchor="right" relation="relative" offset="18" />
 				</anchored>
 			</basicnumber>
+		</sheetdata>
+	</windowclass>
+	<windowclass name="table_main" merge="join">
+		<sheetdata merge="join">
+			<label_tabletop name="label_output" merge="join">
+				<anchored merge="join">
+					<left anchor="right" relation="relative" offset="15" />
+				</anchored>
+			</label_tabletop>
 		</sheetdata>
 	</windowclass>
 </root>
