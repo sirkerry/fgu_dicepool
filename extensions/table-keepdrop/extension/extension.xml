@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<root version="4.1">
+	<properties>
+		<name>Feature: Table Keep/Drop</name>
+		<version>1.0</version>
+		<author>Kerry Harrison (sirkerry)</author>
+		<description>Adds a Keep High/Keep Low + amount field to Table records, so a table's dice roll can drop dice before the row lookup. Stock FGU already natively supports keep/drop notation (e.g. /die 3d6kl1) everywhere except Tables, which roll through a separate pathway with no concept of it -- this extension covers just that gap.</description>
+		<loadorder>10</loadorder>
+	</properties>
+
+	<announcement text="Table Keep/Drop - Version 1.0 by sirkerry" font="emotefont" />
+
+	<base>
+		<includefile source="strings/strings_tablekeepdrop.xml" />
+		<includefile source="campaign/record_table_keepdrop.xml" />
+		<script name="TableKeepDropManager" file="scripts/manager_tablekeepdrop.lua" />
+	</base>
+</root>

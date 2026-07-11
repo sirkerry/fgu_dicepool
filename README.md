@@ -11,9 +11,10 @@ folders are git-tracked backups synced with `sync-to-repo.sh`.
 
 ## Extensions
 
-- **[dicepool](extensions/dicepool/README.md)** — Dice Pool (Keep/Drop).
-  Adds `NdM(kh|kl|dh|dl)K(+/-F)` keep/drop dice pool notation (e.g. `3d6kl1`,
-  `4d6dl1`, `2d20kh1`) via a `/pool` slash command, and lets Table records use
-  the same syntax in their own dice field so the row lookup uses the
-  post-keep/drop total. No `<ruleset>` tag — loads for any CoreRPG-based
-  ruleset.
+- **[table-keepdrop](extensions/table-keepdrop/README.md)** — Table
+  Keep/Drop. Stock FGU already natively supports keep/drop dice notation
+  everywhere (`/die 3d6kl1`, etc.) — Tables are the one place that doesn't
+  reach, since they roll through a separate array-based pathway. Adds a
+  Keep High/Keep Low/Drop High/Drop Low + amount field to Table records so
+  the row lookup uses the post-keep/drop total. No `<ruleset>` tag — loads
+  for any CoreRPG-based ruleset.

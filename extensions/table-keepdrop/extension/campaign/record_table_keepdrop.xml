@@ -7,7 +7,7 @@
 				<anchored width="55">
 					<left anchor="right" relation="relative" offset="20" />
 				</anchored>
-				<static textres="dicepool_label_pool_header" />
+				<static textres="tablekeepdrop_label_pool_header" />
 			</label_tabletop>
 			<button_stringcycler name="poolmode" insertbefore="output">
 				<anchored to="leftanchor" width="60">
@@ -15,9 +15,9 @@
 					<left anchor="right" relation="relative" offset="20" />
 				</anchored>
 				<parameters>
-					<defaultlabelres>dicepool_label_none</defaultlabelres>
-					<labelsres>dicepool_label_keephigh|dicepool_label_keeplow</labelsres>
-					<values>kh|kl</values>
+					<defaultlabelres>tablekeepdrop_label_none</defaultlabelres>
+					<labelsres>tablekeepdrop_label_keephigh|tablekeepdrop_label_keeplow|tablekeepdrop_label_drophigh|tablekeepdrop_label_droplow</labelsres>
+					<values>kh|kl|dh|dl</values>
 				</parameters>
 			</button_stringcycler>
 			<basicnumber name="poolamount" insertbefore="output">

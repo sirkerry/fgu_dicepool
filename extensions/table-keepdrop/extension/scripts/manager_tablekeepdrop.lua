@@ -1,11 +1,17 @@
 --
 -- Adds a "Pool" Keep High/Keep Low + amount control to Table records (see
 -- campaign/record_table_pool.xml), so rolling the table keeps/drops dice
--- before the row lookup, instead of only being usable via the standalone
--- /pool command. The table's existing dice/mod fields are untouched -- Pool
--- mode/amount are two extra DB fields (poolmode/poolamount) read directly,
--- no string parsing involved (DicePoolManager.parsePoolString/isPoolString
--- remain exclusively used by the /pool slash command).
+-- before the row lookup.
+--
+-- This is scoped to Table records only. Stock FGU already natively supports
+-- keep/drop dice-pool notation everywhere else via the /die command and the
+-- {expr=...} roll form (e.g. /die 3d6kl1, or aDice={expr="4d6d1"} as the
+-- official 5E ruleset's own character wizard uses for ability scores) --
+-- confirmed via Fantasy Grounds' own "All Things Dice" documentation. Tables
+-- are the one place that doesn't reach: TableManager/DiceManager roll tables
+-- through a separate array-based pathway with no concept of an expr string
+-- at all, so this extension only needs to cover that gap, not reimplement
+-- keep/drop from scratch.
 --
 -- ActionsManager.total(rRoll) (manager_actions.lua) is just
 -- Utility.getDiceTotal(rRoll.aDice) + rRoll.nMod -- a flat sum of every die
@@ -24,13 +30,13 @@
 --                   or another extension's override) for the "table" result.
 --
 function onInit()
-    TableManager.performRoll = performRoll_dicepool;
+    TableManager.performRoll = performRoll_tablekeepdrop;
 
     Original_onTableRoll = ActionsManager.getResultHandler("table");
-    ActionsManager.registerResultHandler("table", onTableRoll_dicepool);
+    ActionsManager.registerResultHandler("table", onTableRoll_tablekeepdrop);
 end
 
-function performRoll_dicepool(draginfo, rActor, rTableRoll, bUseModStack)
+function performRoll_tablekeepdrop(draginfo, rActor, rTableRoll, bUseModStack)
     if (#(rTableRoll.aDice or {}) == 0) and ((rTableRoll.nMod or 0) == 0) then
         rTableRoll.aDice, rTableRoll.nMod = TableManager.getTableDice(rTableRoll.nodeTable);
     end
@@ -48,7 +54,8 @@ function performRoll_dicepool(draginfo, rActor, rTableRoll, bUseModStack)
 
     local sPoolMode = DB.getValue(rTableRoll.nodeTable, "poolmode", "");
     local nPoolAmount = DB.getValue(rTableRoll.nodeTable, "poolamount", 0);
-    if (sPoolMode == "kh" or sPoolMode == "kl") and nPoolAmount > 0 and nPoolAmount <= #(rRoll.aDice or {}) then
+    local bValidMode = (sPoolMode == "kh") or (sPoolMode == "kl") or (sPoolMode == "dh") or (sPoolMode == "dl");
+    if bValidMode and nPoolAmount > 0 and nPoolAmount <= #(rRoll.aDice or {}) then
         rRoll.sPoolMode = sPoolMode;
         rRoll.nPoolKeepDrop = nPoolAmount;
     end
@@ -76,9 +83,48 @@ function performRoll_dicepool(draginfo, rActor, rTableRoll, bUseModStack)
     ActionsManager.performAction(draginfo, rActor, rRoll);
 end
 
-function onTableRoll_dicepool(rSource, rTarget, rRoll)
+-- Sorts rRoll.aDice ascending by .result and splits into kept/dropped piles
+-- per rRoll.sPoolMode ("kh"/"kl"/"dh"/"dl") + nPoolKeepDrop.
+function splitPool(rRoll)
+    local aSorted = {};
+    for _, v in ipairs(rRoll.aDice or {}) do
+        table.insert(aSorted, v);
+    end
+    table.sort(aSorted, function(a, b) return (a.result or 0) < (b.result or 0) end);
+
+    local nCount = #aSorted;
+    local nAmount = rRoll.nPoolKeepDrop or 0;
+    local sMode = rRoll.sPoolMode;
+
+    -- Reduce all four modes to "keep the first N of the sorted-ascending list"
+    -- or "keep the last N" -- kl/dh keep from the front, kh/dl keep from the back.
+    local nKeepFront, nKeepBack;
+    if sMode == "kl" then
+        nKeepFront = nAmount;
+    elseif sMode == "dh" then
+        nKeepFront = nCount - nAmount;
+    elseif sMode == "kh" then
+        nKeepBack = nAmount;
+    elseif sMode == "dl" then
+        nKeepBack = nCount - nAmount;
+    end
+
+    local aKept, aDropped = {}, {};
+    for i, v in ipairs(aSorted) do
+        local bKeep;
+        if nKeepFront then
+            bKeep = (i <= nKeepFront);
+        else
+            bKeep = (i > (nCount - (nKeepBack or 0)));
+        end
+        table.insert(bKeep and aKept or aDropped, v);
+    end
+    return aKept, aDropped;
+end
+
+function onTableRoll_tablekeepdrop(rSource, rTarget, rRoll)
     if rRoll.sPoolMode then
-        local aKept, aDropped = DicePoolManager.splitPool(rRoll);
+        local aKept, aDropped = splitPool(rRoll);
         rRoll.aDiceDropped = aDropped;
         rRoll.aDice = aKept;
     end

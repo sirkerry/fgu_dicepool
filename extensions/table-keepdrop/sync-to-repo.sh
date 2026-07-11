@@ -5,7 +5,7 @@ set -euo pipefail
 
 REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 FGDATA="${FGDATA:-$HOME/.smiteworks/fgdata}"
-LIVE="$FGDATA/extensions/dicepool"
+LIVE="$FGDATA/extensions/table-keepdrop"
 DEST="$REPO/extension"
 
 if [ ! -d "$LIVE" ]; then
