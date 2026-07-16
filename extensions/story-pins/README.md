@@ -36,14 +36,9 @@ This design — including the panel layout, the drop/drag flow, and the token-li
 - Wraps `TokenManager.onDoubleClick` by capturing and chaining to the previous handler, so it composes with other extensions that also hook it (rather than overwriting a fixed reference)
 - Uses stock CoreRPG's `image_pin` icon (already shipped in `CoreRPG.pak`) for the toolbar toggle — no custom artwork needed
 
-## Known limitation / not yet live-tested
+## Status
 
-This has been built from static source analysis (reading the shipping `CoreRPG.pak` and the proven `PointsOfInterest` extension) but **not yet run inside Fantasy Grounds Unity**. Before trusting it in a real campaign, verify at minimum:
-
-- Dropping a story entry onto the panel creates an entry with the right name/link
-- Dragging the entry's token thumbnail onto the map places a visible token
-- Double-clicking that token opens the linked story entry, for both host and a player (where permitted)
-- Deleting a pin entry removes its token from the map
+Confirmed working live in Fantasy Grounds Unity: dropping a record onto the panel creates an entry, dragging its token thumbnail onto the map places the pin, and double-clicking it opens the linked record. Built from static source analysis (reading the shipping `CoreRPG.pak` and the proven `PointsOfInterest` extension) and then verified in-client rather than assumed — this wasn't an exhaustive pass across every ruleset/permission combination, so if you hit an edge case (e.g. player-side double-click permissions, or a ruleset that overrides `imagewindow`/`TokenManager.onDoubleClick` itself), treat it as a compatibility gap to check first.
 
 ## Installation
 
