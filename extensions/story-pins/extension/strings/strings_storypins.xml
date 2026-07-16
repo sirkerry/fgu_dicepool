@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<root>
+	<string name="storypins_error_openotherlinkedtokenwithoutaccess">[ERROR] Unable to open the linked record for this pin, because your user does not have access.</string>
+
+	<string name="tooltip_storypins">Toggle the Story Pins panel.</string>
+	<string name="storypins_tooltip_showpin">Show pin</string>
+	<string name="storypins_tooltip_hidepin">Hide pin</string>
+
+	<string name="header_storypins">Story Pins</string>
+
+	<string name="list_empty_storypins">Drop a record here to create a pin.</string>
+</root>

@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<root>
+	<windowclass name="imagewindow" merge="join">
+		<script file="campaign/scripts/storypins_imagewindow.lua" />
+		<sheetdata>
+			<storypins_window insertbefore="image" />
+		</sheetdata>
+	</windowclass>
+
+	<!-- Used when an image is popped out to a standalone panel -->
+	<windowclass name="imagepanelwindow" merge="join">
+		<script file="campaign/scripts/storypins_imagewindow.lua" />
+		<sheetdata>
+			<storypins_window insertbefore="image" />
+		</sheetdata>
+	</windowclass>
+
+	<windowclass name="imagewindow_toolbar" merge="join">
+		<sheetdata>
+			<toolbar_toggle_right name="image_storypins">
+				<initbyname />
+			</toolbar_toggle_right>
+		</sheetdata>
+	</windowclass>
+
+	<!-- Pins Panel -->
+	<template name="storypins_window">
+		<subwindow name="storypins">
+			<anchored width="288">
+				<top parent="contentanchor" relation="current" />
+				<bottom parent="bottomanchor" relation="current" />
+				<right parent="rightanchor" relation="relative" />
+			</anchored>
+			<class>storypins_panel</class>
+			<frame name="groupbox" />
+			<fastinit />
+		</subwindow>
+	</template>
+
+	<windowclass name="storypins_panel">
+		<margins control="3,3,3,3" />
+		<sheetdata>
+			<anchor_column name="columnanchor" />
+
+			<header_column name="storypins_header">
+				<static textres="header_storypins" />
+			</header_column>
+
+			<button_iedit name="list_iedit">
+				<anchored to="storypins_header">
+					<top />
+					<right anchor="right" offset="0" />
+				</anchored>
+				<gmvisibleonly />
+				<edittarget>list_storypins</edittarget>
+			</button_iedit>
+
+			<windowlist name="list_storypins">
+				<script file="campaign/scripts/storypins_list.lua" />
+				<anchored>
+					<left />
+					<top parent="columnanchor" anchor="bottom" relation="relative" offset="5" />
+					<right />
+					<bottom />
+				</anchored>
+				<empty font="list-empty" textres="list_empty_storypins" />
+				<allowdelete />
+				<class>storypins_entry</class>
+				<sortby><control>name</control></sortby>
+				<datasource>.pins</datasource>
+			</windowlist>
+		</sheetdata>
+	</windowclass>
+
+	<windowclass name="storypins_entry">
+		<script file="campaign/scripts/storypins_entry.lua" />
+		<margins control="0,0,0,2" />
+		<sheetdata>
+			<hs name="tokenrefid" />
+			<hs name="tokenrefnode" />
+
+			<genericcontrol name="active_spacer_top">
+				<anchored position="insidetopleft" width="0" height="5" />
+				<invisible />
+			</genericcontrol>
+
+			<storypins_token name="token" />
+
+			<genericcontrol name="rightanchor">
+				<anchored width="0" height="0">
+					<top parent="active_spacer_top" anchor="bottom" offset="10" />
+					<right offset="-7" />
+				</anchored>
+				<invisible />
+			</genericcontrol>
+
+			<button_idelete name="idelete">
+				<anchored to="rightanchor">
+					<top offset="10" />
+					<right anchor="left" relation="relative" offset="-3" />
+				</anchored>
+			</button_idelete>
+			<linkfield name="link">
+				<anchored to="rightanchor" width="20" height="20">
+					<top offset="10" />
+					<right anchor="left" relation="relative" offset="-3" />
+				</anchored>
+				<class>encounter</class>
+				<selfonempty />
+				<readonly />
+				<script>
+					function onValueChanged()
+						window.onLinkChanged();
+					end
+				</script>
+			</linkfield>
+
+			<string_storypins_entry_name name="name" />
+
+			<buttonfield name="tokenvis">
+				<anchored to="token" position="rightlow" offset="-2,-4" width="12" height="12" />
+				<frame name="tempmodmini" offset="3,1,4,3" />
+				<state icon="visibilityoff" tooltipres="storypins_tooltip_showpin" />
+				<state icon="visibilityon" tooltipres="storypins_tooltip_hidepin" />
+				<script>
+					function onValueChanged()
+						window.onVisibilityChanged();
+					end
+				</script>
+			</buttonfield>
+		</sheetdata>
+	</windowclass>
+
+	<template name="storypins_token">
+		<tokenfield>
+			<anchored width="40" height="40">
+				<top parent="active_spacer_top" anchor="bottom" offset="7" />
+				<left offset="5" />
+			</anchored>
+			<empty>token_empty</empty>
+			<script file="campaign/scripts/storypins_token.lua" />
+		</tokenfield>
+	</template>
+	<template name="string_storypins_entry_name">
+		<string_ct>
+			<anchored height="20">
+				<top parent="active_spacer_top" anchor="bottom" relation="relative" offset="20" />
+				<left parent="token" anchor="right" offset="12" />
+				<right parent="rightanchor" anchor="left" relation="relative" offset="-10" />
+			</anchored>
+			<tabtarget next="initresult" />
+			<script file="ct/scripts/ct_name.lua" />
+		</string_ct>
+	</template>
+</root>
